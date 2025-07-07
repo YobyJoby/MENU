@@ -66,7 +66,7 @@ const menuData = {
       { id: 'bev3', name: 'Red Bull', basePrice: 3.5, image: 'https://i.imgur.com/MzFfjWO.png' },
       { id: 'bev4', name: 'Monster', basePrice: 3.5, image: 'https://i.imgur.com/UOSkGeT.png' },
     ],
-    modifiers: [], // no modifiers
+    modifiers: [],
   },
   Wraps: {
     items: [
@@ -84,32 +84,32 @@ const menuData = {
       { id: 'rl1', name: 'Kimbap', basePrice: 7.5, image: 'https://i.imgur.com/4DYIDku.png' },
       { id: 'rl2', name: 'California Roll', basePrice: 8, image: 'https://i.imgur.com/xZ8eXgT.png' },
     ],
-    modifiers: [], // no modifiers
+    modifiers: [],
   },
   Snacks: {
     items: [
       { id: 'sn1', name: 'Energy Bar', basePrice: 2.5, image: 'https://i.imgur.com/wk5EAVj.png' },
       { id: 'sn2', name: 'Chocolate Bar', basePrice: 2.5, image: 'https://i.imgur.com/KjZZaQk.png' },
     ],
-    modifiers: [], // no modifiers
+    modifiers: [],
   },
   Breakfast: {
     items: [
       { id: 'bf1', name: 'Egg Sausage Cheese Croissant', basePrice: 5.5, image: 'https://i.imgur.com/Ak0jrTU.png' },
       { id: 'bf2', name: 'Yogurt Granola Bowl', basePrice: 6, image: 'https://i.imgur.com/R4g7s6R.png' },
     ],
-    modifiers: [], // no modifiers
+    modifiers: [],
   },
 };
 
 function App() {
-  const [category, setCategory] = useState(null); // current main category
-  const [selectedItem, setSelectedItem] = useState(null); // current selected submenu item
-  const [modifierSelections, setModifierSelections] = useState({}); // selected modifiers for the item
+  const [category, setCategory] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [modifierSelections, setModifierSelections] = useState({});
   const [cart, setCart] = useState([]);
   const [view, setView] = useState('menu'); // menu, cart, checkout
 
-  // Calculate price with modifiers
+  // Price calculation
   const calcPrice = (item, modifiersSelected) => {
     let price = item.basePrice;
     if (!modifiersSelected) return price;
@@ -122,19 +122,17 @@ function App() {
     return price;
   };
 
+  // Add to cart
   const addToCart = () => {
     if (!selectedItem) return;
-
-    // Create cart item with selected modifiers and calculated price
     const finalPrice = calcPrice(selectedItem, modifierSelections);
     const cartItem = {
-      id: `${selectedItem.id}-${Date.now()}`, // unique id
+      id: `${selectedItem.id}-${Date.now()}`,
       name: selectedItem.name,
       modifiers: Object.keys(modifierSelections).filter(m => modifierSelections[m]),
       price: finalPrice,
       image: selectedItem.image,
     };
-
     setCart([...cart, cartItem]);
     setSelectedItem(null);
     setModifierSelections({});
@@ -146,24 +144,237 @@ function App() {
   const total = subtotal + tax;
 
   // Render main menu categories
-  const renderMainMenu = () => (
-    <div style={{ padding: 20 }}>
-      <h1>Snack Bar Menu</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-        {Object.keys(menuData).map(cat => (
-          <button
-            key={cat}
-            onClick={() => {
-              setCategory(cat);
-              setSelectedItem(null);
-              setModifierSelections({});
-              setView('menu');
-            }}
-            style={{
-              padding: '12px 20px',
-              borderRadius: 8,
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              minWidth: 140,
-              background: category === cat ? '#007bff' : '#eee',
-              color: category === cat ? '#fff' :
+  if (view === 'menu' && !category) {
+    return (
+      <div style={{ padding: 20 }}>
+        <h1>Snack Bar Menu</h1>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+          {Object.keys(menuData).map(cat => (
+            <button
+              key={cat}
+              onClick={() => {
+                setCategory(cat);
+                setSelectedItem(null);
+                setModifierSelections({});
+              }}
+              style={{
+                padding: '12px 20px',
+                borderRadius: 8,
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                minWidth: 140,
+                background: '#007bff',
+                color: '#fff',
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+        <div style={{ marginTop: 20 }}>
+          <button onClick={() => setView('cart')} style={{ marginRight: 10, padding: '10px 15px' }}>
+            See Cart ({cart.length})
+          </button>
+          <button onClick={() => setView('checkout')} style={{ padding: '10px 15px' }}>
+            Checkout
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Render submenu (items and modifiers)
+  if (view === 'menu' && category && !selectedItem) {
+    const catData = menuData[category];
+    return (
+      <div style={{ padding: 20 }}>
+        <button onClick={() => setCategory(null)} style={{ marginBottom: 15 }}>
+          ← Back to Categories
+        </button>
+        <h2>{category}</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+          {catData.items.map(item => (
+            <div
+              key={item.id}
+              onClick={() => setSelectedItem(item)}
+              style={{
+                cursor: 'pointer',
+                border: '1px solid #ccc',
+                borderRadius: 8,
+                padding: 10,
+                width: 140,
+                textAlign: 'center',
+              }}
+            >
+              <img src={item.image} alt={item.name} style={{ maxWidth: '100%', height: 100, objectFit: 'contain' }} />
+              <div style={{ marginTop: 8 }}>{item.name}</div>
+              <div style={{ fontWeight: 'bold' }}>${item.basePrice.toFixed(2)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Render modifiers + add to cart button
+  if (view === 'menu' && category && selectedItem) {
+    const catData = menuData[category];
+    return (
+      <div style={{ padding: 20 }}>
+        <button onClick={() => setSelectedItem(null)} style={{ marginBottom: 15 }}>
+          ← Back to {category}
+        </button>
+        <h2>{selectedItem.name}</h2>
+        <img src={selectedItem.image} alt={selectedItem.name} style={{ height: 150, objectFit: 'contain' }} />
+        <div style={{ marginTop: 20 }}>
+          {catData.modifiers.length > 0 ? (
+            <div>
+              <h3>Choose modifiers:</h3>
+              {catData.modifiers.map(mod => (
+                <label key={mod.name} style={{ display: 'block', marginBottom: 8 }}>
+                  <input
+                    type="checkbox"
+                    checked={!!modifierSelections[mod.name]}
+                    onChange={() =>
+                      setModifierSelections(prev => ({
+                        ...prev,
+                        [mod.name]: !prev[mod.name],
+                      }))
+                    }
+                  />
+                  {` ${mod.name} ${mod.price > 0 ? `(+ $${mod.price.toFixed(2)})` : ''}`}
+                </label>
+              ))}
+            </div>
+          ) : (
+            <div>No modifiers for this item</div>
+          )}
+        </div>
+        <button
+          onClick={addToCart}
+          style={{
+            marginTop: 20,
+            padding: '10px 20px',
+            fontWeight: 'bold',
+            backgroundColor: '#28a745',
+            color: 'white',
+            border: 'none',
+            borderRadius: 6,
+            cursor: 'pointer',
+          }}
+        >
+          Add to Cart (${calcPrice(selectedItem, modifierSelections).toFixed(2)})
+        </button>
+      </div>
+    );
+  }
+
+  // Render cart
+  if (view === 'cart') {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Your Cart</h2>
+        {cart.length === 0 && <div>Your cart is empty.</div>}
+        {cart.length > 0 && (
+          <>
+            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+              {cart.map(item => (
+                <li key={item.id} style={{ marginBottom: 15, borderBottom: '1px solid #ddd', paddingBottom: 10 }}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{ height: 50, width: 50, objectFit: 'contain', marginRight: 15, verticalAlign: 'middle' }}
+                  />
+                  <strong>{item.name}</strong>{' '}
+                  {item.modifiers.length > 0 && (
+                    <em style={{ fontSize: 12, color: '#555' }}>
+                      ({item.modifiers.join(', ')})
+                    </em>
+                  )}
+                  <span style={{ float: 'right', fontWeight: 'bold' }}>${item.price.toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+            <div style={{ marginTop: 20 }}>
+              <div>Subtotal: ${subtotal.toFixed(2)}</div>
+              <div>Tax (13%): ${tax.toFixed(2)}</div>
+              <div>
+                <strong>Total: ${total.toFixed(2)}</strong>
+              </div>
+            </div>
+          </>
+        )}
+        <div style={{ marginTop: 20 }}>
+          <button onClick={() => setView('menu')} style={{ marginRight: 10 }}>
+            Back to Menu
+          </button>
+          <button onClick={() => setView('checkout')} disabled={cart.length === 0}>
+            Checkout
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Render checkout
+  if (view === 'checkout') {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Checkout</h2>
+        {cart.length === 0 ? (
+          <div>Your cart is empty.</div>
+        ) : (
+          <>
+            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+              {cart.map(item => (
+                <li key={item.id} style={{ marginBottom: 15, borderBottom: '1px solid #ddd', paddingBottom: 10 }}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{ height: 50, width: 50, objectFit: 'contain', marginRight: 15, verticalAlign: 'middle' }}
+                  />
+                  <strong>{item.name}</strong>{' '}
+                  {item.modifiers.length > 0 && (
+                    <em style={{ fontSize: 12, color: '#555' }}>
+                      ({item.modifiers.join(', ')})
+                    </em>
+                  )}
+                  <span style={{ float: 'right', fontWeight: 'bold' }}>${item.price.toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+            <div style={{ marginTop: 20 }}>
+              <div>Subtotal: ${subtotal.toFixed(2)}</div>
+              <div>Tax (13%): ${tax.toFixed(2)}</div>
+              <div>
+                <strong>Total: ${total.toFixed(2)}</strong>
+              </div>
+            </div>
+            <button
+              style={{
+                marginTop: 20,
+                padding: '10px 20px',
+                fontWeight: 'bold',
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: 6,
+                cursor: 'pointer',
+              }}
+              onClick={() => alert('Here you would trigger the Clover Flex payment API with total: ' + total.toFixed(2))}
+            >
+              Checkout
+            </button>
+            <div style={{ marginTop: 10 }}>
+              <button onClick={() => setView('cart')}>Back to Cart</button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  return null;
+}
+
+export default App;
