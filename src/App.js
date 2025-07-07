@@ -29,9 +29,18 @@ const menuItems = [
 function App() {
   const [cart, setCart] = useState([]);
   const [view, setView] = useState('menu');
+  const [clickedItemId, setClickedItemId] = useState(null);
 
   const addToCart = (item) => {
     setCart([...cart, item]);
+    setClickedItemId(item.id);
+    setTimeout(() => setClickedItemId(null), 500);
+  };
+
+  const removeFromCart = (index) => {
+    const newCart = [...cart];
+    newCart.splice(index, 1);
+    setCart(newCart);
   };
 
   const subtotal = cart.reduce((acc, item) => acc + item.price, 0);
@@ -42,19 +51,44 @@ function App() {
     <div style={{ padding: 20 }}>
       <h1>Menu</h1>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-        {menuItems.map((item) => (
-          <div key={item.id} style={{ border: '1px solid #ccc', borderRadius: 10, padding: 10, width: 200 }}>
-            <img src={item.image} alt={item.name} style={{ width: '100%', borderRadius: 10 }} />
-            <h3>{item.name}</h3>
-            <p>${item.price.toFixed(2)}</p>
-            <p style={{ fontSize: 12 }}>Modifiers: {item.modifiers.join(', ')}</p>
-            <button onClick={() => addToCart(item)}>Add to Cart</button>
-          </div>
-        ))}
+        {menuItems.map((item) => {
+          const isClicked = clickedItemId === item.id;
+          return (
+            <div
+              key={item.id}
+              onClick={() => addToCart(item)}
+              style={{
+                border: '1px solid #ccc',
+                borderRadius: 10,
+                padding: 10,
+                width: 200,
+                cursor: 'pointer',
+                backgroundColor: isClicked ? '#add8e6' : 'white',
+                transition: 'background-color 0.3s ease',
+                userSelect: 'none',
+              }}
+            >
+              <img src={item.image} alt={item.name} style={{ width: '100%', borderRadius: 10 }} />
+              <h3>{item.name}</h3>
+              <p>${item.price.toFixed(2)}</p>
+              <p style={{ fontSize: 12 }}>Modifiers: {item.modifiers.join(', ')}</p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart(item);
+                }}
+              >
+                Add to Cart
+              </button>
+            </div>
+          );
+        })}
       </div>
       <div style={{ marginTop: 20 }}>
         <button onClick={() => setView('cart')}>See Cart</button>
-        <button onClick={() => setView('checkout')} style={{ marginLeft: 10 }}>Checkout</button>
+        <button onClick={() => setView('checkout')} style={{ marginLeft: 10 }}>
+          Checkout
+        </button>
       </div>
     </div>
   );
@@ -62,12 +96,26 @@ function App() {
   const renderCart = () => (
     <div style={{ padding: 20 }}>
       <h1>Cart</h1>
-      {cart.length === 0 ? <p>No items in cart.</p> : cart.map((item, idx) => (
-        <p key={idx}>{item.name} - ${item.price.toFixed(2)}</p>
-      ))}
+      {cart.length === 0 ? (
+        <p>No items in cart.</p>
+      ) : (
+        cart.map((item, idx) => (
+          <div
+            key={idx}
+            style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center' }}
+          >
+            <span>
+              {item.name} - ${item.price.toFixed(2)}
+            </span>
+            <button onClick={() => removeFromCart(idx)}>Remove</button>
+          </div>
+        ))
+      )}
       <div style={{ marginTop: 20 }}>
         <button onClick={() => setView('menu')}>Back to Menu</button>
-        <button onClick={() => setView('checkout')} style={{ marginLeft: 10 }}>Checkout</button>
+        <button onClick={() => setView('checkout')} style={{ marginLeft: 10 }}>
+          Checkout
+        </button>
       </div>
     </div>
   );
@@ -75,12 +123,26 @@ function App() {
   const renderCheckout = () => (
     <div style={{ padding: 20 }}>
       <h1>Checkout</h1>
-      {cart.map((item, idx) => (
-        <p key={idx}>{item.name} - ${item.price.toFixed(2)}</p>
-      ))}
+      {cart.length === 0 ? (
+        <p>No items in cart.</p>
+      ) : (
+        cart.map((item, idx) => (
+          <div
+            key={idx}
+            style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center' }}
+          >
+            <span>
+              {item.name} - ${item.price.toFixed(2)}
+            </span>
+            <button onClick={() => removeFromCart(idx)}>Remove</button>
+          </div>
+        ))
+      )}
       <p>Subtotal: ${subtotal.toFixed(2)}</p>
       <p>Tax (13%): ${tax.toFixed(2)}</p>
-      <p><strong>Total: ${total.toFixed(2)}</strong></p>
+      <p>
+        <strong>Total: ${total.toFixed(2)}</strong>
+      </p>
       <button onClick={() => setView('menu')}>Back to Menu</button>
       <button style={{ marginLeft: 10 }}>Checkout</button>
     </div>
