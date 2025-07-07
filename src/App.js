@@ -1,380 +1,175 @@
 import React, { useState } from 'react';
 
-const TAX_RATE = 0.13;
+// Sample image URL or local import (replace with your image path if local)
+const defaultImage = '/your-image.jpg'; // We will add the image file soon
 
-const menuData = {
-  'Bubble Coffee': {
-    items: [
-      { id: 'bc1', name: 'Iced', basePrice: 4.5, image: 'https://i.imgur.com/qLm2F2F.png' },
-      { id: 'bc2', name: 'Iced Decaf', basePrice: 4.5, image: 'https://i.imgur.com/F3LjEDo.png' },
-      { id: 'bc3', name: 'Warm', basePrice: 4, image: 'https://i.imgur.com/8DaHsRf.png' },
-      { id: 'bc4', name: 'Warm Decaf', basePrice: 4, image: 'https://i.imgur.com/aj3sQHZ.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 0.5 },
-      { name: 'X-Large', price: 1.0 },
-    ],
+const MENU = {
+  "Bubble Coffee": {
+    subs: ["Iced", "Iced Decaf", "Warm", "Warm Decaf"],
+    modifiers: { "Med": 0, "Large": 0.5, "X-Large": 1.0 },
+    basePrice: 4.0,
   },
-  'Bubble Tea': {
-    items: [
-      { id: 'bt1', name: 'Brown Sugar', basePrice: 5, image: 'https://i.imgur.com/9hvgxXe.png' },
-      { id: 'bt2', name: 'Mango', basePrice: 5, image: 'https://i.imgur.com/FYO4IoC.png' },
-      { id: 'bt3', name: 'Avocado', basePrice: 5, image: 'https://i.imgur.com/wnTg5rd.png' },
-      { id: 'bt4', name: 'Peach', basePrice: 5, image: 'https://i.imgur.com/vBpnHKc.png' },
-      { id: 'bt5', name: 'Grapefruit', basePrice: 5, image: 'https://i.imgur.com/6hvDg81.png' },
-      { id: 'bt6', name: 'Matcha', basePrice: 5, image: 'https://i.imgur.com/7vQ7kcZ.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 0.5 },
-      { name: 'X-Large', price: 1.0 },
-    ],
+  "Bubble Tea": {
+    subs: ["Brown Sugar", "Mango", "Avocado", "Peach", "Grapefruit", "Matcha"],
+    modifiers: { "Med": 0, "Large": 0.5, "X-Large": 1.0 },
+    basePrice: 4.5,
   },
-  Smoothies: {
-    items: [
-      { id: 'sm1', name: 'Banana-Blueberry', basePrice: 6, image: 'https://i.imgur.com/7jkR1Fk.png' },
-      { id: 'sm2', name: 'Avocado-Banana', basePrice: 6, image: 'https://i.imgur.com/NXjLJir.png' },
-      { id: 'sm3', name: 'Peanut Butter Berry', basePrice: 6, image: 'https://i.imgur.com/WvJQayY.png' },
-      { id: 'sm4', name: 'Mango', basePrice: 6, image: 'https://i.imgur.com/y4YfBkA.png' },
-      { id: 'sm5', name: 'Orange-Vanilla', basePrice: 6, image: 'https://i.imgur.com/8TX2I41.png' },
-      { id: 'sm6', name: 'Detox', basePrice: 6, image: 'https://i.imgur.com/9Q6MYX7.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 0.75 },
-      { name: 'X-Large', price: 1.25 },
-    ],
+  "Smoothies": {
+    subs: ["Banana-Blueberry", "Avocado-Banana", "Peanut Butter Berry", "Mango", "Orange-Vanilla", "Detox"],
+    modifiers: { "Med": 0, "Large": 0.5, "X-Large": 1.0 },
+    basePrice: 5.0,
   },
-  'Iced Drinks': {
-    items: [
-      { id: 'id1', name: 'Iced Tea', basePrice: 3.5, image: 'https://i.imgur.com/KJxxHj6.png' },
-      { id: 'id2', name: 'Iced Coffee', basePrice: 4, image: 'https://i.imgur.com/4QUlDne.png' },
-      { id: 'id3', name: 'Lemon Slushy', basePrice: 4, image: 'https://i.imgur.com/pPS4CQa.png' },
-      { id: 'id4', name: 'Berry Slushy', basePrice: 4, image: 'https://i.imgur.com/XfK6WhR.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 0.5 },
-      { name: 'X-Large', price: 1.0 },
-    ],
+  "Iced Drinks": {
+    subs: ["Iced Tea", "Iced Coffee", "Lemon Slushy", "Berry Slushy"],
+    modifiers: { "Med": 0, "Large": 0.5, "X-Large": 1.0 },
+    basePrice: 3.5,
   },
-  Beverages: {
-    items: [
-      { id: 'bev1', name: 'Water', basePrice: 1.5, image: 'https://i.imgur.com/tQQnlM2.png' },
-      { id: 'bev2', name: 'Gatorade', basePrice: 2.5, image: 'https://i.imgur.com/hVvLlyq.png' },
-      { id: 'bev3', name: 'Red Bull', basePrice: 3.5, image: 'https://i.imgur.com/MzFfjWO.png' },
-      { id: 'bev4', name: 'Monster', basePrice: 3.5, image: 'https://i.imgur.com/UOSkGeT.png' },
-    ],
-    modifiers: [],
+  "Beverages": {
+    subs: ["Water", "Gatorade", "Red Bull", "Monster"],
+    modifiers: {},
+    basePrice: 2.5,
   },
-  Wraps: {
-    items: [
-      { id: 'wp1', name: 'Garden Chicken', basePrice: 8.5, image: 'https://i.imgur.com/NPZ7Zlv.png' },
-      { id: 'wp2', name: 'Signature Korean', basePrice: 9.5, image: 'https://i.imgur.com/nJGgqJH.png' },
-      { id: 'wp3', name: 'Greek', basePrice: 9, image: 'https://i.imgur.com/EXWqM6f.png' },
-    ],
-    modifiers: [
-      { name: 'Extra Cheese', price: 1 },
-      { name: 'Extra Chicken Breast', price: 2 },
-    ],
+  "Wraps": {
+    subs: ["Garden Chicken", "Signature Korean", "Greek"],
+    modifiers: { "Extra Cheese": 1.0, "Extra Chicken Breast": 2.0 },
+    basePrice: 7.0,
   },
-  Rolls: {
-    items: [
-      { id: 'rl1', name: 'Kimbap', basePrice: 7.5, image: 'https://i.imgur.com/4DYIDku.png' },
-      { id: 'rl2', name: 'California Roll', basePrice: 8, image: 'https://i.imgur.com/xZ8eXgT.png' },
-    ],
-    modifiers: [],
+  "Rolls": {
+    subs: ["Kimbap", "California Roll"],
+    modifiers: {},
+    basePrice: 6.0,
   },
-  Snacks: {
-    items: [
-      { id: 'sn1', name: 'Energy Bar', basePrice: 2.5, image: 'https://i.imgur.com/wk5EAVj.png' },
-      { id: 'sn2', name: 'Chocolate Bar', basePrice: 2.5, image: 'https://i.imgur.com/KjZZaQk.png' },
-    ],
-    modifiers: [],
+  "Snacks": {
+    subs: ["Energy Bar", "Chocolate Bar"],
+    modifiers: {},
+    basePrice: 2.0,
   },
-  Breakfast: {
-    items: [
-      { id: 'bf1', name: 'Egg Sausage Cheese Croissant', basePrice: 5.5, image: 'https://i.imgur.com/Ak0jrTU.png' },
-      { id: 'bf2', name: 'Yogurt Granola Bowl', basePrice: 6, image: 'https://i.imgur.com/R4g7s6R.png' },
-    ],
-    modifiers: [],
-  },
+  "Breakfast": {
+    subs: ["Egg Sausage Cheese Croissant", "Yogurt Granola Bowl"],
+    modifiers: {},
+    basePrice: 5.5,
+  }
 };
 
 function App() {
-  const [category, setCategory] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [modifierSelections, setModifierSelections] = useState({});
   const [cart, setCart] = useState([]);
   const [view, setView] = useState('menu'); // menu, cart, checkout
 
-  // Price calculation
-  const calcPrice = (item, modifiersSelected) => {
-    let price = item.basePrice;
-    if (!modifiersSelected) return price;
-    for (const modName in modifiersSelected) {
-      if (modifiersSelected[modName]) {
-        const modObj = menuData[category]?.modifiers.find(m => m.name === modName);
-        if (modObj) price += modObj.price;
-      }
-    }
-    return price;
+  // Add item to cart helper
+  const addToCart = (category, subItem, modifier) => {
+    const base = MENU[category].basePrice;
+    const modifierCost = MENU[category].modifiers[modifier] || 0;
+    const price = base + modifierCost;
+    const newItem = { category, subItem, modifier, price };
+    setCart([...cart, newItem]);
   };
 
-  // Add to cart
-  const addToCart = () => {
-    if (!selectedItem) return;
-    const finalPrice = calcPrice(selectedItem, modifierSelections);
-    const cartItem = {
-      id: `${selectedItem.id}-${Date.now()}`,
-      name: selectedItem.name,
-      modifiers: Object.keys(modifierSelections).filter(m => modifierSelections[m]),
-      price: finalPrice,
-      image: selectedItem.image,
-    };
-    setCart([...cart, cartItem]);
-    setSelectedItem(null);
-    setModifierSelections({});
-    setCategory(null);
-  };
-
-  const subtotal = cart.reduce((acc, i) => acc + i.price, 0);
-  const tax = subtotal * TAX_RATE;
+  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const tax = subtotal * 0.13;
   const total = subtotal + tax;
 
-  // Render main menu categories
-  if (view === 'menu' && !category) {
-    return (
-      <div style={{ padding: 20 }}>
-        <h1>Snack Bar Menu</h1>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          {Object.keys(menuData).map(cat => (
-            <button
-              key={cat}
-              onClick={() => {
-                setCategory(cat);
-                setSelectedItem(null);
-                setModifierSelections({});
-              }}
-              style={{
-                padding: '12px 20px',
-                borderRadius: 8,
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                minWidth: 140,
-                background: '#007bff',
-                color: '#fff',
-              }}
-            >
-              {cat}
-            </button>
+  return (
+    <div style={{ padding: 20, fontFamily: 'Arial' }}>
+      {view === 'menu' && (
+        <>
+          <h1>Snack Bar Menu</h1>
+          {Object.keys(MENU).map(category => (
+            <div key={category} style={{ marginBottom: 20 }}>
+              <h2>{category}</h2>
+              {MENU[category].subs.map(subItem => (
+                <div key={subItem} style={{ marginLeft: 20 }}>
+                  <strong>{subItem}</strong>
+                  <div style={{ marginLeft: 20 }}>
+                    {(Object.keys(MENU[category].modifiers).length > 0) ? (
+                      Object.keys(MENU[category].modifiers).map(mod => (
+                        <button
+                          key={mod}
+                          onClick={() => addToCart(category, subItem, mod)}
+                          style={{ margin: 5 }}
+                        >
+                          {mod} (${(MENU[category].basePrice + MENU[category].modifiers[mod]).toFixed(2)})
+                        </button>
+                      ))
+                    ) : (
+                      <button
+                        onClick={() => addToCart(category, subItem, '')}
+                        style={{ margin: 5 }}
+                      >
+                        Add (${MENU[category].basePrice.toFixed(2)})
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           ))}
-        </div>
-        <div style={{ marginTop: 20 }}>
-          <button onClick={() => setView('cart')} style={{ marginRight: 10, padding: '10px 15px' }}>
+          <button onClick={() => setView('cart')} style={{ marginTop: 20, padding: '10px 20px' }}>
             See Cart ({cart.length})
           </button>
-          <button onClick={() => setView('checkout')} style={{ padding: '10px 15px' }}>
+          <button
+            onClick={() => setView('checkout')}
+            style={{ marginTop: 20, marginLeft: 10, padding: '10px 20px' }}
+          >
             Checkout
           </button>
-        </div>
-      </div>
-    );
-  }
+        </>
+      )}
 
-  // Render submenu (items and modifiers)
-  if (view === 'menu' && category && !selectedItem) {
-    const catData = menuData[category];
-    return (
-      <div style={{ padding: 20 }}>
-        <button onClick={() => setCategory(null)} style={{ marginBottom: 15 }}>
-          ← Back to Categories
-        </button>
-        <h2>{category}</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          {catData.items.map(item => (
-            <div
-              key={item.id}
-              onClick={() => setSelectedItem(item)}
-              style={{
-                cursor: 'pointer',
-                border: '1px solid #ccc',
-                borderRadius: 8,
-                padding: 10,
-                width: 140,
-                textAlign: 'center',
-              }}
-            >
-              <img src={item.image} alt={item.name} style={{ maxWidth: '100%', height: 100, objectFit: 'contain' }} />
-              <div style={{ marginTop: 8 }}>{item.name}</div>
-              <div style={{ fontWeight: 'bold' }}>${item.basePrice.toFixed(2)}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // Render modifiers + add to cart button
-  if (view === 'menu' && category && selectedItem) {
-    const catData = menuData[category];
-    return (
-      <div style={{ padding: 20 }}>
-        <button onClick={() => setSelectedItem(null)} style={{ marginBottom: 15 }}>
-          ← Back to {category}
-        </button>
-        <h2>{selectedItem.name}</h2>
-        <img src={selectedItem.image} alt={selectedItem.name} style={{ height: 150, objectFit: 'contain' }} />
-        <div style={{ marginTop: 20 }}>
-          {catData.modifiers.length > 0 ? (
-            <div>
-              <h3>Choose modifiers:</h3>
-              {catData.modifiers.map(mod => (
-                <label key={mod.name} style={{ display: 'block', marginBottom: 8 }}>
-                  <input
-                    type="checkbox"
-                    checked={!!modifierSelections[mod.name]}
-                    onChange={() =>
-                      setModifierSelections(prev => ({
-                        ...prev,
-                        [mod.name]: !prev[mod.name],
-                      }))
-                    }
-                  />
-                  {` ${mod.name} ${mod.price > 0 ? `(+ $${mod.price.toFixed(2)})` : ''}`}
-                </label>
-              ))}
-            </div>
+      {view === 'cart' && (
+        <>
+          <h1>Your Cart</h1>
+          {cart.length === 0 ? (
+            <p>Your cart is empty.</p>
           ) : (
-            <div>No modifiers for this item</div>
-          )}
-        </div>
-        <button
-          onClick={addToCart}
-          style={{
-            marginTop: 20,
-            padding: '10px 20px',
-            fontWeight: 'bold',
-            backgroundColor: '#28a745',
-            color: 'white',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-          }}
-        >
-          Add to Cart (${calcPrice(selectedItem, modifierSelections).toFixed(2)})
-        </button>
-      </div>
-    );
-  }
-
-  // Render cart
-  if (view === 'cart') {
-    return (
-      <div style={{ padding: 20 }}>
-        <h2>Your Cart</h2>
-        {cart.length === 0 && <div>Your cart is empty.</div>}
-        {cart.length > 0 && (
-          <>
-            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-              {cart.map(item => (
-                <li key={item.id} style={{ marginBottom: 15, borderBottom: '1px solid #ddd', paddingBottom: 10 }}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ height: 50, width: 50, objectFit: 'contain', marginRight: 15, verticalAlign: 'middle' }}
-                  />
-                  <strong>{item.name}</strong>{' '}
-                  {item.modifiers.length > 0 && (
-                    <em style={{ fontSize: 12, color: '#555' }}>
-                      ({item.modifiers.join(', ')})
-                    </em>
-                  )}
-                  <span style={{ float: 'right', fontWeight: 'bold' }}>${item.price.toFixed(2)}</span>
+            <ul>
+              {cart.map((item, i) => (
+                <li key={i}>
+                  {item.category} - {item.subItem} {item.modifier && `(${item.modifier})`} : ${item.price.toFixed(2)}
                 </li>
               ))}
             </ul>
-            <div style={{ marginTop: 20 }}>
-              <div>Subtotal: ${subtotal.toFixed(2)}</div>
-              <div>Tax (13%): ${tax.toFixed(2)}</div>
-              <div>
-                <strong>Total: ${total.toFixed(2)}</strong>
-              </div>
-            </div>
-          </>
-        )}
-        <div style={{ marginTop: 20 }}>
-          <button onClick={() => setView('menu')} style={{ marginRight: 10 }}>
+          )}
+          <button onClick={() => setView('menu')} style={{ marginTop: 20, padding: '10px 20px' }}>
             Back to Menu
           </button>
-          <button onClick={() => setView('checkout')} disabled={cart.length === 0}>
+          <button onClick={() => setView('checkout')} style={{ marginTop: 20, marginLeft: 10, padding: '10px 20px' }}>
             Checkout
           </button>
-        </div>
-      </div>
-    );
-  }
+        </>
+      )}
 
-  // Render checkout
-  if (view === 'checkout') {
-    return (
-      <div style={{ padding: 20 }}>
-        <h2>Checkout</h2>
-        {cart.length === 0 ? (
-          <div>Your cart is empty.</div>
-        ) : (
-          <>
-            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-              {cart.map(item => (
-                <li key={item.id} style={{ marginBottom: 15, borderBottom: '1px solid #ddd', paddingBottom: 10 }}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ height: 50, width: 50, objectFit: 'contain', marginRight: 15, verticalAlign: 'middle' }}
-                  />
-                  <strong>{item.name}</strong>{' '}
-                  {item.modifiers.length > 0 && (
-                    <em style={{ fontSize: 12, color: '#555' }}>
-                      ({item.modifiers.join(', ')})
-                    </em>
-                  )}
-                  <span style={{ float: 'right', fontWeight: 'bold' }}>${item.price.toFixed(2)}</span>
-                </li>
-              ))}
-            </ul>
-            <div style={{ marginTop: 20 }}>
-              <div>Subtotal: ${subtotal.toFixed(2)}</div>
-              <div>Tax (13%): ${tax.toFixed(2)}</div>
-              <div>
-                <strong>Total: ${total.toFixed(2)}</strong>
-              </div>
-            </div>
-            <button
-              style={{
-                marginTop: 20,
-                padding: '10px 20px',
-                fontWeight: 'bold',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: 6,
-                cursor: 'pointer',
-              }}
-              onClick={() => alert('Here you would trigger the Clover Flex payment API with total: ' + total.toFixed(2))}
-            >
-              Checkout
-            </button>
-            <div style={{ marginTop: 10 }}>
-              <button onClick={() => setView('cart')}>Back to Cart</button>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
-
-  return null;
+      {view === 'checkout' && (
+        <>
+          <h1>Checkout</h1>
+          {cart.length === 0 ? (
+            <p>Your cart is empty.</p>
+          ) : (
+            <>
+              <ul>
+                {cart.map((item, i) => (
+                  <li key={i}>
+                    {item.category} - {item.subItem} {item.modifier && `(${item.modifier})`} : ${item.price.toFixed(2)}
+                  </li>
+                ))}
+              </ul>
+              <p>Subtotal: ${subtotal.toFixed(2)}</p>
+              <p>Tax (13%): ${tax.toFixed(2)}</p>
+              <h3>Total: ${total.toFixed(2)}</h3>
+              <button
+                onClick={() => alert(`Send $${total.toFixed(2)} to Clover Flex for payment`)}
+                style={{ marginTop: 20, padding: '10px 20px' }}
+              >
+                Checkout
+              </button>
+            </>
+          )}
+          <button onClick={() => setView('menu')} style={{ marginTop: 20, padding: '10px 20px' }}>
+            Back to Menu
+          </button>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default App;
