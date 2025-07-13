@@ -6,12 +6,15 @@ export default defineConfig({
   root: './',
   build: {
     rollupOptions: {
-      input: './src/index.js',
+      input: './index.html',  // <-- fix here: use index.html as input
     },
   },
   resolve: {
     alias: {
       '@': '/src',
     },
+  },
+  server: {
+    port: 3000,
   },
 });
