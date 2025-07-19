@@ -1,186 +1,14 @@
-// Part 1 of 2 — Full App.jsx code with wraps multiple modifiers fix
-
 import React, { useState } from 'react';
+import { MainMenu, ViewCartButton, BackToMenuButton, CheckoutButton } from './Buttons'; // added buttons import
+import menu from './menu';
+import Cart from './Cart';
+import Checkout from './Checkout';
 
 const TAX_RATE = 0.13;
-
-const menu = [
-  {
-    id: 1,
-    name: 'Bubble Coffee',
-    subMenu: [
-      { id: 101, name: 'Iced', price: 4.5, image: '/Yoby - Menu - bubble coffee 1.png' },
-      { id: 102, name: 'Iced Decaf', price: 4.5, image: '/Yoby - Menu - bubble coffee 2.png' },
-      { id: 103, name: 'Warm', price: 4.0, image: '/Yoby - Menu - bubble coffee 1.png' },
-      { id: 104, name: 'Warm Decaf', price: 4.0, image: '/Yoby - Menu - bubble coffee 1.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 1.5 },
-      { name: 'X-Large', price: 2.5 },
-    ],
-    image: '/Yoby - Menu - bubble coffee ICON.png',
-  },
-  {
-    id: 2,
-    name: 'Bubble Tea',
-    subMenu: [
-      { id: 201, name: 'Brown Sugar Milk Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 1.png' },
-      { id: 202, name: 'Taro Milk Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 2.png' },
-      { id: 203, name: 'Winter Melon Milk Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 3.png' },
-      { id: 204, name: 'Jasmine Milk Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 4.png' },
-      { id: 205, name: 'Grapefruit Fruit Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 5.png' },
-      { id: 206, name: 'Mango Fruit Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 6.png' },
-      { id: 207, name: 'Orange Fruit Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 7.png' },
-      { id: 208, name: 'Peach Fruit Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 8.png' },
-      { id: 209, name: 'Grape Fruit Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 9.png' },
-      { id: 210, name: 'Passion Fruit Tea', price: 5.0, image: '/Yoby - Menu - Bubble Tea 10.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 1.5 },
-      { name: 'X-Large', price: 2.5 },
-    ],
-    secondModifiers: [
-      { name: 'Add Protein', price: 1 },
-      { name: 'Add Collagen', price: 1 },
-      { name: 'Add Creatine', price: 1 },
-    ],
-    image: '/Yoby - Menu - Bubble Tea ICON.png',
-  },
-  {
-    id: 3,
-    name: 'Smoothies',
-    subMenu: [
-      {
-        id: 301,
-        name: 'Strawberry Blossom',
-        price: 6.0,
-        effect: 'Antioxidant, Vitamin C, Bright Skin',
-        ingredients: 'Strawberry, Banana, Pineapple',
-        image: '/Yoby - Menu - Smoothie 1.png',
-      },
-      {
-        id: 302,
-        name: 'Nutty Date Delight',
-        price: 6.0,
-        effect: 'Muscle building & recovery',
-        ingredients: 'Banana, Peanut Butter, Pineapple, Cocoa, dates',
-        image: '/Yoby - Menu - Smoothie 2.png',
-      },
-      {
-        id: 303,
-        name: "Hailey's Glamourous Shimmer",
-        price: 6.0,
-        effect: 'Antioxidant, Vitamin C, Bright Skin, Hair, and Nails',
-        ingredients: 'Strawberry, Pineapple, Avacado, Coconut',
-        image: '/Yoby - Menu - Smoothie 3.png',
-      },
-      {
-        id: 304,
-        name: 'Mango Island',
-        price: 6.0,
-        effect: 'Vitamin C, Skin Regeneration, Energy',
-        ingredients: 'Mango, Banana, Pinapple, Coconut milk',
-        image: '/Yoby - Menu - Smoothie 4.png',
-      },
-      {
-        id: 305,
-        name: 'Blueberry Energetic Shower',
-        price: 6.0,
-        effect: 'Antioxidant, Anti-Aging, Stress Relief',
-        ingredients: 'Blueberry, Banana, Pineapple',
-        image: '/Yoby - Menu - Smoothie 5.png',
-      },
-      {
-        id: 306,
-        name: 'Zesty Green Detox',
-        price: 6.0,
-        effect: 'Detoxification, Inflammation Relief',
-        ingredients: 'Avocado, Lemon Juice, Cabbage',
-        image: '/Yoby - Menu - Smoothie 6.png',
-      },
-      {
-        id: 307,
-        name: 'Blood Power Detox',
-        price: 6.0,
-        effect: 'Blood purification, Fat Burning, Blood Vessel Health',
-        ingredients: 'Beet, Apple, Carrot, Coconut Water',
-        image: '/Yoby - Menu - Smoothie 7.png',
-      },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 1.5 },
-      { name: 'X-Large', price: 2.5 },
-    ],
-    secondModifiers: [
-      { name: 'Add Protein', price: 1 },
-      { name: 'Add Collagen', price: 1 },
-      { name: 'Add Creatine', price: 1 },
-    ],
-    image: '/Yoby - Menu - Smoothie ICON.png',
-  },
-  {
-    id: 4,
-    name: 'Iced Drinks',
-    subMenu: [
-      { id: 401, name: 'Iced Tea', price: 3.5, image: '/Yoby - Menu - iced drinks 1.png' },
-      { id: 402, name: 'Iced Coffee', price: 4.0, image: '/Yoby - Menu - iced drinks 2.png' },
-      { id: 403, name: 'Lemon Slushy', price: 4.5, image: '/Yoby - Menu - iced drinks 3.png' },
-      { id: 404, name: 'Berry Slushy', price: 4.5, image: '/Yoby - Menu - iced drinks 4.png' },
-    ],
-    modifiers: [
-      { name: 'Medium', price: 0 },
-      { name: 'Large', price: 1.5 },
-      { name: 'X-Large', price: 2.5 },
-    ],
-    image: '/Yoby - Menu - iced drinks ICON.png',
-  },
-  {
-    id: 5,
-    name: 'Beverages',
-    subMenu: [
-      { id: 501, name: 'Water', price: 2.0, image: '/Yoby - Menu - beverages 1.png' },
-      { id: 502, name: 'Gatorade', price: 3.0, image: '/Yoby - Menu - beverages 2.png' },
-      { id: 503, name: 'Red Bull', price: 4.5, image: '/Yoby - Menu - beverages 3.png' },
-      { id: 504, name: 'Monster', price: 4.5, image: '/Yoby - Menu - beverages 1.png' },
-    ],
-    modifiers: [],
-    image: '/Yoby - Menu - beverages ICON.png',
-  },
-  {
-    id: 6,
-    name: 'Wraps',
-    subMenu: [
-      { id: 601, name: 'Garden Chicken', price: 7.99, image: '/Yoby - Menu - wraps 1.png' },
-      { id: 602, name: 'Signature Korean', price: 8.99, image: '/Yoby - Menu - wraps 2.png' },
-      { id: 603, name: 'Greek', price: 7.99, image: '/Yoby - Menu - wraps 1.png' },
-    ],
-    modifiers: [
-      { name: 'No, thanks', price: 0 },
-      { name: 'Extra Cheese', price: 1.5 },
-      { name: 'Extra Chicken Breast', price: 2.5 },
-    ],
-    image: '/Yoby - Menu - wraps ICON.png',
-  },
-  {
-    id: 7,
-    name: 'Rolls',
-    subMenu: [
-      { id: 701, name: 'Kimbap', price: 6.5, image: '/Yoby - Menu - rolls 1.png' },
-      { id: 702, name: 'California Roll', price: 7.0, image: '/Yoby - Menu - rolls 2.png' },
-    ],
-    modifiers: [],
-    image: '/Yoby - Menu - rolls ICON.png',
-  },
-];
-
-// ...continued in Part 2 below
-// Part 2 of 2 — Full App.jsx code continued with wraps multiple modifiers fix and full component
+const BUTTON_COLOR = '#4605e5';
 
 function App() {
-  const [view, setView] = useState('main'); // main | submenu | checkout | exit
+  const [view, setView] = useState('main'); // 'main' | 'submenu' | 'cart' | 'checkout' | 'exit'
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
   const [selectedModifiers, setSelectedModifiers] = useState([]);
@@ -188,7 +16,7 @@ function App() {
   const [cart, setCart] = useState([]);
   const [promptMessage, setPromptMessage] = useState('');
 
-  // Open submenu for selected menu category
+  // Open submenu for a main menu category
   const openSubMenu = (menuItem) => {
     setSelectedMenu(menuItem);
     setSelectedSubItem(null);
@@ -198,12 +26,9 @@ function App() {
     setView('submenu');
   };
 
-  // Toggle modifiers:
-  // For wraps (id 6) allow multiple selection (checkbox style)
-  // For others, if sizes, single selection (radio style)
+  // Toggle a modifier (checkbox or radio style logic)
   const toggleModifier = (modifier) => {
     if (selectedMenu?.id === 6) {
-      // Wraps allow multiple modifiers (checkbox)
       const exists = selectedModifiers.find((m) => m.name === modifier.name);
       if (exists) {
         setSelectedModifiers(selectedModifiers.filter((m) => m.name !== modifier.name));
@@ -211,11 +36,9 @@ function App() {
         setSelectedModifiers([...selectedModifiers, modifier]);
       }
     } else {
-      // For sizes, radio style toggle
       if (['Medium', 'Large', 'X-Large'].includes(modifier.name)) {
         setSelectedModifiers([modifier]);
       } else {
-        // checkbox style for any other case
         const exists = selectedModifiers.find((m) => m.name === modifier.name);
         if (exists) {
           setSelectedModifiers(selectedModifiers.filter((m) => m.name !== modifier.name));
@@ -226,6 +49,7 @@ function App() {
     }
   };
 
+  // Toggle second modifiers (always checkboxes)
   const toggleSecondModifier = (modifier) => {
     const exists = selectedSecondModifiers.find((m) => m.name === modifier.name);
     if (exists) {
@@ -235,32 +59,26 @@ function App() {
     }
   };
 
-  // When clicking Add to Cart from submenu items
+  // When user clicks on submenu item to add to cart or choose modifiers
   const addToCartClicked = (subItem) => {
-    setSelectedSubItem(subItem);
-    setSelectedModifiers([]);
-    setSelectedSecondModifiers([]);
-    if (selectedMenu?.id === 6) {
-      setPromptMessage('Would you like to supe it up?');
-    } else if (
-      selectedMenu?.modifiers.length > 0 &&
-      ![6, 7].includes(selectedMenu.id)
-    ) {
-      setPromptMessage('What size are you thinking?');
-    } else {
+    // If selectedMenu has no modifiers, add directly to cart
+    if (!selectedMenu.modifiers || selectedMenu.modifiers.length === 0) {
       addItemToCart(subItem, [], []);
+      setView('main');
+    } else {
+      setSelectedSubItem(subItem);
+      setSelectedModifiers([]);
+      setSelectedSecondModifiers([]);
+      setPromptMessage('');
     }
   };
 
-  // Confirm modifiers selection and add to cart
+  // Confirm adding item with modifiers to cart
   const confirmSelection = () => {
-    // For menus other than wraps (6) and rolls (7), require size selection if applicable
     if (
       selectedMenu?.modifiers.length > 0 &&
       ![6, 7].includes(selectedMenu.id) &&
-      ['Medium', 'Large', 'X-Large'].some(
-        (mod) => selectedModifiers.find((m) => m.name === mod) !== undefined
-      ) === false
+      selectedModifiers.length === 0
     ) {
       alert('Please select a size before proceeding.');
       return;
@@ -270,30 +88,42 @@ function App() {
     setSelectedSubItem(null);
     setSelectedModifiers([]);
     setSelectedSecondModifiers([]);
+    setView('main');
   };
 
-  // Add item to cart with price calculation
+  // Add final item with modifiers to cart state, increment quantity if identical item exists
   const addItemToCart = (item, modifiers, secondMods) => {
     let price = item.price;
     modifiers.forEach((mod) => {
-      price += mod.price;
+      price += mod.price || 0;
     });
     secondMods.forEach((mod) => {
-      price += mod.price;
+      price += mod.price || 0;
     });
 
-    const cartItem = {
-      id: `${item.id}-${Date.now()}`,
-      name: item.name,
-      basePrice: item.price,
-      modifiers: modifiers.map((m) => m.name),
-      secondModifiers: secondMods.map((m) => m.name),
-      price,
-      image: item.image,
-    };
+    const existingIndex = cart.findIndex((cartItem) =>
+      cartItem.name === item.name &&
+      JSON.stringify(cartItem.modifiers) === JSON.stringify(modifiers.map((m) => m.name)) &&
+      JSON.stringify(cartItem.secondModifiers) === JSON.stringify(secondMods.map((m) => m.name))
+    );
 
-    setCart([...cart, cartItem]);
-    setView('main');
+    if (existingIndex !== -1) {
+      const updatedCart = [...cart];
+      updatedCart[existingIndex].quantity += 1;
+      setCart(updatedCart);
+    } else {
+      const cartItem = {
+        id: `${item.id}-${Date.now()}`,
+        name: item.name,
+        basePrice: item.price,
+        modifiers: modifiers.map((m) => m.name),
+        secondModifiers: secondMods.map((m) => m.name),
+        price,
+        image: item.image,
+        quantity: 1,
+      };
+      setCart([...cart, cartItem]);
+    }
   };
 
   // Remove item from cart by id
@@ -301,7 +131,7 @@ function App() {
     setCart(cart.filter((item) => item.id !== id));
   };
 
-  // Place order, show exit screen for 5 seconds
+  // Place order and reset cart after delay
   const placeOrder = () => {
     setView('exit');
     setTimeout(() => {
@@ -310,270 +140,326 @@ function App() {
     }, 5000);
   };
 
-  // Totals
-  const subtotal = cart.reduce((acc, item) => acc + item.price, 0);
+  // Calculate totals
+  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
-  return (
-    <div className="app-container" style={{ padding: '20px', fontFamily: 'Arial' }}>
-      {/* Persistent Cart / Checkout button */}
-      {view !== 'checkout' && view !== 'exit' && (
-        <button
-          onClick={() => setView('checkout')}
-          style={{
-            position: 'fixed',
-            top: 20,
-            right: 20,
-            padding: '10px 20px',
-            backgroundColor: '#673ab7',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            zIndex: 1000,
-          }}
-        >
-          View Cart ({cart.length})
-        </button>
-      )}
+  // Navigation helpers
+  const goBackToMenu = () => setView('main');
+  const goToCart = () => setView('cart');
+  const goToCheckout = () => setView('checkout');
 
+  // Render top right buttons except on their own pages
+  const renderTopRightButtons = () => (
+    <div
+      style={{
+        position: 'fixed',
+        top: 20,
+        right: 20,
+        display: 'flex',
+        gap: 10,
+        zIndex: 1000,
+      }}
+    >
+      {view !== 'main' && <BackToMenuButton onClick={goBackToMenu} />}
+      {view !== 'cart' && <ViewCartButton onClick={goToCart} cartCount={cart.length} />}
+      {view !== 'checkout' && <CheckoutButton onClick={goToCheckout} />}
+    </div>
+  );
+
+  return (
+    <div className="app-container" style={{ padding: '60px 20px 20px 20px', fontFamily: 'Arial' }}>
+      {renderTopRightButtons()}
+
+      {/* Main Menu View */}
       {view === 'main' && (
         <>
-          <h1>Yoby Joby Menu</h1>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-            {menu.map((menuItem) => (
-              <div
-                key={menuItem.id}
-                onClick={() => openSubMenu(menuItem)}
-                style={{
-                  cursor: 'pointer',
-                  border: '1px solid #ccc',
-                  borderRadius: '8px',
-                  width: '150px',
-                  padding: '10px',
-                  textAlign: 'center',
-                }}
-              >
-                <img
-                  src={menuItem.image}
-                  alt={menuItem.name}
-                  style={{ width: '100%', height: '100px', objectFit: 'contain' }}
-                />
-                <h3>{menuItem.name}</h3>
-              </div>
-            ))}
+          <div
+            style={{
+              width: 540,
+              margin: '0 auto 40px auto',
+              textAlign: 'center',
+              position: 'relative',
+              left: '-25px',
+            }}
+          >
+            <img
+              src="/Yoby-Joby-MENU-Title.png"
+              alt="Yoby Joby Menu Title"
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                margin: '0 auto',
+              }}
+              draggable={false}
+            />
           </div>
+          <MainMenu menu={menu} onSelectItem={openSubMenu} />
         </>
       )}
 
+      {/* Submenu View */}
       {view === 'submenu' && selectedMenu && (
         <>
-          <button onClick={() => setView('main')} style={{ marginBottom: '15px' }}>
-            &larr; Back to Menu
-          </button>
-          <h2>{selectedMenu.name}</h2>
+          <h2 style={{ textAlign: 'center', color: BUTTON_COLOR, marginBottom: 20 }}>
+            {selectedMenu.name}
+          </h2>
           <div
             style={{
               display: 'flex',
               flexWrap: 'wrap',
               gap: '20px',
+              justifyContent: 'center',
+              marginBottom: 10,
             }}
           >
             {selectedMenu.subMenu.map((subItem) => (
               <div
                 key={subItem.id}
+                onClick={() => addToCartClicked(subItem)}
                 style={{
                   cursor: 'pointer',
                   border: '1px solid #ccc',
                   borderRadius: '8px',
                   width: '150px',
-                  padding: '10px',
+                  padding: '6px',
                   textAlign: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  minHeight: '320px', // enough for content + button
+                  boxSizing: 'border-box',
+                  position: 'relative',
+                  userSelect: 'none',
                 }}
               >
-                <div>
-                  <img
-                    src={subItem.image}
-                    alt={subItem.name}
-                    style={{ width: '100%', height: '100px', objectFit: 'contain' }}
-                  />
-                  <h4>{subItem.name}</h4>
-                  {subItem.effect && <p><em>{subItem.effect}</em></p>}
-                  {subItem.ingredients && <p>{subItem.ingredients}</p>}
-                  <p>${subItem.price.toFixed(2)}</p>
+                <img
+                  src={subItem.image}
+                  alt={subItem.name}
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                  draggable={false}
+                />
+                <div style={{ fontWeight: 'bold', marginTop: '6px' }}>{subItem.name}</div>
+                {subItem.effect && (
+                  <div
+                    style={{
+                      fontSize: '10px',
+                      color: 'gray',
+                      marginTop: '4px',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {subItem.effect}
+                  </div>
+                )}
+                {subItem.ingredients && (
+                  <div
+                    style={{
+                      fontSize: '10px',
+                      color: 'gray',
+                      marginTop: '2px',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {subItem.ingredients}
+                  </div>
+                )}
+                <div style={{ marginTop: '6px', fontWeight: 'bold' }}>
+                  ${subItem.price.toFixed(2)}
                 </div>
-                <button onClick={() => addToCartClicked(subItem)} style={{ marginTop: 'auto' }}>
-                  Add to Cart
-                </button>
               </div>
             ))}
           </div>
 
-          {promptMessage && (
-            <div
-              style={{
-                marginTop: '20px',
-                padding: '15px',
-                border: '1px solid #666',
-                borderRadius: '8px',
-                backgroundColor: '#f0f0f0',
-              }}
-            >
-              <h3>{promptMessage}</h3>
-              {selectedMenu.modifiers.length > 0 && (
-                <div style={{ marginBottom: '15px' }}>
-                  <p>
-                    {selectedMenu.id === 6 ? 'Select your modifiers:' : 'Select Size:'}
-                  </p>
-                  {selectedMenu.modifiers.map((mod) => (
-                    <label key={mod.name} style={{ marginRight: '10px' }}>
-                      <input
-                        type={selectedMenu.id === 6 ? "checkbox" : "radio"}
-                        name="modifier"
-                        checked={selectedModifiers.find((m) => m.name === mod.name) !== undefined}
-                        onChange={() => toggleModifier(mod)}
-                      />
-                      {mod.name}
-                    </label>
-                  ))}
-                </div>
-              )}
-              {selectedMenu.secondModifiers && selectedMenu.secondModifiers.length > 0 && (
-                <div style={{ marginBottom: '15px' }}>
-                  <p>Add-ons:</p>
-                  {selectedMenu.secondModifiers.map((mod) => (
-                    <label key={mod.name} style={{ marginRight: '10px' }}>
-                      <input
-                        type="checkbox"
-                        checked={selectedSecondModifiers.find((m) => m.name === mod.name) !== undefined}
-                        onChange={() => toggleSecondModifier(mod)}
-                      />
-                      {mod.name}
-                    </label>
-                  ))}
-                </div>
-              )}
-              <button onClick={confirmSelection} style={{ marginRight: '10px' }}>
-                Confirm
-              </button>
-              <button
-                onClick={() => {
-                  setPromptMessage('');
-                  setSelectedSubItem(null);
-                  setSelectedModifiers([]);
-                  setSelectedSecondModifiers([]);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-        </>
-      )}
-
-      {view === 'checkout' && (
-        <>
-          <button onClick={() => setView(selectedMenu ? 'submenu' : 'main')} style={{ marginBottom: '15px' }}>
-            &larr; Back to {selectedMenu ? selectedMenu.name : 'Menu'}
-          </button>
-          <h2>Checkout</h2>
-          {cart.length === 0 ? (
-            <p>Your cart is empty.</p>
-          ) : (
+          {/* Show modifiers & confirm ONLY if a submenu item selected */}
+          {selectedSubItem && (
             <>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #ccc' }}>
-                    <th style={{ textAlign: 'left', padding: '8px' }}>Item</th>
-                    <th style={{ textAlign: 'left', padding: '8px' }}>Modifiers</th>
-                    <th style={{ textAlign: 'right', padding: '8px' }}>Price</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cart.map((item) => (
-                    <tr key={item.id} style={{ borderBottom: '1px solid #eee' }}>
-                      <td style={{ padding: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        {item.image && (
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '4px' }}
-                          />
-                        )}
-                        <div>
-                          <strong>{item.name}</strong>
-                        </div>
-                      </td>
-                      <td style={{ padding: '8px' }}>
-                        {item.modifiers.length > 0 && (
-                          <div>
-                            Size: {item.modifiers.join(', ')}
-                          </div>
-                        )}
-                        {item.secondModifiers.length > 0 && (
-                          <div>Add-ons: {item.secondModifiers.join(', ')}</div>
-                        )}
-                      </td>
-                      <td style={{ padding: '8px', textAlign: 'right' }}>${item.price.toFixed(2)}</td>
-                      <td style={{ padding: '8px', textAlign: 'center' }}>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
+              {/* First modifiers */}
+              {selectedMenu.modifiers.length > 0 && (
+                <div
+                  style={{
+                    marginBottom: '20px',
+                    borderTop: '1px solid #ccc',
+                    paddingTop: '10px',
+                    maxWidth: 480,
+                    margin: '0 auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontWeight: 'bold',
+                      marginBottom: '12px',
+                      fontSize: '16px',
+                      color: BUTTON_COLOR,
+                      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                    }}
+                  >
+                    Select Size:
+                  </div>
+                  <div
+                    style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}
+                  >
+                    {selectedMenu.modifiers.map((mod) => {
+                      const isChecked = selectedModifiers.some((m) => m.name === mod.name);
+                      const isRadio = ['Medium', 'Large', 'X-Large'].includes(mod.name);
+                      return (
+                        <label
+                          key={mod.name}
                           style={{
-                            backgroundColor: '#ff4d4f',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            padding: '5px 10px',
+                            display: 'flex',
+                            alignItems: 'center',
                             cursor: 'pointer',
+                            border: isChecked ? `2px solid ${BUTTON_COLOR}` : '1px solid #ccc',
+                            borderRadius: '6px',
+                            padding: '8px 14px',
+                            fontWeight: '600',
+                            userSelect: 'none',
+                            backgroundColor: isChecked ? '#e6e0ff' : 'white',
+                            transition: 'all 0.3s ease',
+                            boxShadow: isChecked ? `0 0 8px 2px rgba(70,5,229,0.4)` : 'none',
                           }}
                         >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          <input
+                            type={isRadio ? 'radio' : 'checkbox'}
+                            name={isRadio ? 'size' : mod.name}
+                            checked={isChecked}
+                            onChange={() => toggleModifier(mod)}
+                            style={{ marginRight: '8px', cursor: 'pointer' }}
+                          />
+                          {mod.name}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
-              <div style={{ marginTop: '20px', textAlign: 'right' }}>
-                <p>Subtotal: ${subtotal.toFixed(2)}</p>
-                <p>Tax (13%): ${tax.toFixed(2)}</p>
-                <h3>Total: ${total.toFixed(2)}</h3>
-              </div>
+              {/* Secondary modifiers appear ONLY if first modifier selected */}
+              {selectedModifiers.length > 0 &&
+                selectedMenu.secondModifiers &&
+                selectedMenu.secondModifiers.length > 0 && (
+                  <div
+                    style={{
+                      marginBottom: '20px',
+                      borderTop: '1px solid #ccc',
+                      paddingTop: '10px',
+                      maxWidth: 480,
+                      margin: '0 auto',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 'bold',
+                        marginBottom: '12px',
+                        fontSize: '16px',
+                        color: BUTTON_COLOR,
+                        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                      }}
+                    >
+                      Add Extras:
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '12px',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      {selectedMenu.secondModifiers.map((mod) => {
+                        const isChecked = selectedSecondModifiers.some((m) => m.name === mod.name);
+                        return (
+                          <label
+                            key={mod.name}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              cursor: 'pointer',
+                              border: isChecked ? `2px solid ${BUTTON_COLOR}` : '1px solid #ccc',
+                              borderRadius: '6px',
+                              padding: '8px 14px',
+                              fontWeight: '600',
+                              userSelect: 'none',
+                              backgroundColor: isChecked ? '#e6e0ff' : 'white',
+                              transition: 'all 0.3s ease',
+                              boxShadow: isChecked ? `0 0 8px 2px rgba(70,5,229,0.4)` : 'none',
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => toggleSecondModifier(mod)}
+                              style={{ marginRight: '8px', cursor: 'pointer' }}
+                            />
+                            {mod.name}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
-              <button
-                onClick={placeOrder}
-                style={{
-                  marginTop: '20px',
-                  backgroundColor: '#673ab7',
-                  color: 'white',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}
-              >
-                Place Order
-              </button>
+              {/* Confirm button only after first modifier selected */}
+              {selectedModifiers.length > 0 && (
+                <div style={{ textAlign: 'center', marginTop: 10 }}>
+                  <button
+                    onClick={confirmSelection}
+                    style={{
+                      backgroundColor: BUTTON_COLOR,
+                      color: 'white',
+                      border: 'none',
+                      padding: '10px 20px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                    }}
+                  >
+                    Confirm Selection
+                  </button>
+                </div>
+              )}
             </>
           )}
         </>
       )}
 
+      {/* Cart View */}
+      {view === 'cart' && (
+        <Cart
+          cartItems={cart}
+          onBackToMenu={goBackToMenu}
+          onGoToCheckout={goToCheckout}
+          onRemoveFromCart={removeFromCart}
+        />
+      )}
+
+      {/* Checkout View */}
+      {view === 'checkout' && (
+        <Checkout
+          cart={cart}
+          subtotal={subtotal}
+          tax={tax}
+          total={total}
+          placeOrder={placeOrder}
+          BUTTON_COLOR={BUTTON_COLOR}
+        />
+      )}
+
+      {/* Exit View */}
       {view === 'exit' && (
-        <div style={{ textAlign: 'center', marginTop: '100px' }}>
-          <h2>Thank you for your order!</h2>
-          <img
-            src="/Yoby Joby - VECTOR (Sticker).png"
-            alt="Yoby Joby Sticker"
-            style={{ marginTop: '20px', maxWidth: '200px', height: 'auto' }}
-          />
+        <div
+          style={{
+            textAlign: 'center',
+            marginTop: 100,
+            fontSize: '24px',
+            color: BUTTON_COLOR,
+            fontWeight: 'bold',
+          }}
+        >
+          Thank you for your order!
+          <br />
+          We will notify you when it's ready.
         </div>
       )}
     </div>

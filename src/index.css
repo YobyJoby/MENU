@@ -1,233 +1,33 @@
-/* index.css */
-
-/* Global reset and font */
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-/* Main app container */
 .app {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 10px;
-  background-color: #fafafa;
+  font-family: sans-serif;
+  padding: 20px;
 }
 
-/* Header styles */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #7c4dff;
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-header button {
-  background-color: #673ab7;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-header button:hover {
-  background-color: #512da8;
-}
-
-/* Headings in main and submenu */
-main h2 {
-  font-size: 1.6rem;
-  color: #3f51b5;
-  margin-bottom: 10px;
-}
-
-/* Grid layouts */
-.menu-grid,
-.submenu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
-}
-
-/* Menu and submenu cards */
-.menu-card,
-.submenu-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
-  cursor: pointer;
-  padding: 10px;
-  text-align: center;
-  transition: transform 0.15s ease-in-out;
-}
-
-.menu-card:hover,
-.submenu-card:hover {
-  transform: scale(1.05);
-}
-
-/* Images in cards */
-.menu-card img,
-.submenu-card img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-bottom: 6px;
-  user-select: none;
-}
-
-/* Text in cards */
-.menu-card h3,
-.submenu-card h4 {
-  margin: 0 0 5px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #222;
-}
-
-.submenu-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.submenu-card p i {
-  font-style: italic;
-  color: #777;
-}
-
-.submenu-card p small {
-  color: #999;
-  font-size: 0.8rem;
-}
-
-/* Buttons */
-button {
-  background-color: #6200ea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #3700b3;
-}
-
-button:disabled {
-  background-color: #bbb;
-  cursor: not-allowed;
-}
-
-/* Prompt box */
-.prompt {
-  background-color: #e0e0e0;
-  border-radius: 12px;
-  padding: 15px;
-  margin-top: 15px;
-  box-shadow: inset 0 0 8px #aaa;
-}
-
-.prompt h3 {
-  margin-top: 0;
-  color: #3f51b5;
-}
-
-.prompt label {
+.menu-title {
+  width: 100%;
+  max-width: 600px;
   display: block;
-  margin: 8px 0;
-  font-weight: 500;
-  user-select: none;
+  margin: 0 auto 20px;
 }
 
-.prompt input[type="radio"],
-.prompt input[type="checkbox"] {
-  margin-right: 8px;
-}
-
-/* Cart list */
-ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-ul li {
-  background: white;
-  margin-bottom: 10px;
-  padding: 10px 10px 10px 5px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+.menu-grid,
+.submenu {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
 }
 
-ul li img {
-  margin-right: 15px;
-  border-radius: 6px;
-  box-shadow: 0 0 5px #ccc;
-  user-select: none;
+.modifier-panel,
+.checkout,
+.exit-screen {
+  text-align: center;
 }
 
-ul li strong {
-  flex-grow: 1;
-  font-size: 1rem;
-}
-
-ul li button {
-  background-color: #b00020;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  margin-left: 10px;
-}
-
-ul li button:hover {
-  background-color: #7f0015;
-}
-
-/* Horizontal rule */
-hr {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 20px 0;
-}
-
-/* Paragraph text */
-p {
-  font-size: 1rem;
-  color: #333;
-}
-
-p strong {
-  font-weight: 700;
-}
-
-/* Responsive grid for smaller screens */
-@media (max-width: 600px) {
-  .menu-grid,
-  .submenu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  header h1 {
-    font-size: 1.4rem;
-  }
+.top-buttons {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
 }
